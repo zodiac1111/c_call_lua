@@ -3,7 +3,7 @@
 ///  指定的是5.2的版本
 #include <lua5.2/lua.h>
 #include <lua5.2/lauxlib.h> //luaL_newstate();
-
+#include <lua5.2/lualib.h> // luaL_openlibs
 #include "read_global_value.h"
 
 // 模拟数据
@@ -40,11 +40,19 @@ int load(const char* fname, int* w, int* h)
 	/* lua_pcall 执行匿名函数，以编译源代码成二进制码 */
 	/* 并将全局变量压栈（函数名也是变量）。*/
 	/* 这句看似无用，但是不能省 */
+#if 0 // 启动的方式不同?
 	if (luaL_loadfile(L, fname)||lua_pcall(L, 0, 0, 0)) {
 		CLOG_ERR("Error Msg is %s.", lua_tostring(L, -1));
 		return -1;
 	}
-
+#else
+	luaL_openlibs(L);
+	if (luaL_dofile(L, fname)) {
+		CLOG_ERR("Could not load counter module:%s",fname);
+		lua_close(L);
+		return -1;
+	}
+#endif
 	/**
 	 * 1. 取lua中的值
 	 */
@@ -60,9 +68,9 @@ int load(const char* fname, int* w, int* h)
 	}
 	*w = lua_tointeger(L, -2);
 	*h = lua_tointeger(L, -1);
-
-	CLOG_INFO("例1 width = %d, height = %d", *w , *h );
-	//stackDump(L);
+#define QTY_RETUN_E1 1 /// 返回值数量
+	CLOG_INFO("例1 width = %d, height = %d", *w, *h);
+	stackDump(L);
 	/**
 	 *  2. 调用函数流程, 参数2个int值
 	 *  参考 http://codingnow.cn/language/1530.html
@@ -81,7 +89,7 @@ int load(const char* fname, int* w, int* h)
 	//stackDump(L);
 	lua_pop(L, QTY_RETUN);     // 出栈 ,只需要弹出返回值
 	lua_pop(L, QTY_PARAM);
-	CLOG_INFO("例2 调用函数 结果 %d, 浮点数 %lf", sum,ds);
+	CLOG_INFO("例2 调用函数 结果 %d, 浮点数 %lf", sum, ds);
 
 	//stackDump(L);
 	/**
@@ -108,8 +116,6 @@ int load(const char* fname, int* w, int* h)
 		return -3;
 	}
 	CLOG_INFO("例3 age = %ld", lua_tointeger(L, -1));
-
-
 
 	CLOG_INFO("================ 结束 =================");
 	stackDump(L);
