@@ -5,8 +5,8 @@
 #include <lua5.2/lauxlib.h> //luaL_newstate();
 #include <lua5.2/lualib.h> // luaL_openlibs
 #include "read_global_value.h"
-// 模拟数据
 
+// 模拟数据
 D data = {
 	.name = "Bob"
 	, .ivalue = 42
@@ -189,7 +189,6 @@ int out(lua_State* L, D *d)
 	get_int(L, d, ivalue);
 	get_int(L, d, t);
 	get_number(L, d, fvalue);
-
 	/// pop全局变量
 	lua_pop(L, -1);
 	return 0;
