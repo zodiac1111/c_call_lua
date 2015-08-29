@@ -80,6 +80,11 @@ int load(const char* fname, int* w, int* h)
 	 * 3. 获得lua表例子.
 	 * http://cn.cocos2d-x.org/tutorial/show?id=1223
 	 */
+	//从Lua里面取得me这个table，并压入栈
+	lua_getglobal(L, "me");
+	if (!lua_istable(L, -1)) {
+		printf("error! me is not a table");
+	}
 
 	// 关闭
 	lua_close(L);
