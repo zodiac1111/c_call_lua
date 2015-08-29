@@ -46,12 +46,16 @@ void load(lua_State* L, const char* fname, int* w, int* h)
     }
     *w = lua_tointeger(L,-2);
     *h = lua_tointeger(L,-1);
-	lua_getglobal(L,"add");  
-	lua_pushinteger(L, *w);
-	lua_pushinteger(L, *h);
-	lua_call(L, 2, 1);
-	int sum = (int)lua_tointeger(L, -1);
-	lua_pop(L, 1);
+
+	// 调用函数流程, 参数2个int值
+// 参考 http://codingnow.cn/language/1530.html
+	lua_getglobal(L,"add");  //获得全局变量,函数也是变量
+	lua_pushinteger(L, *w); //入栈1
+	lua_pushinteger(L, *h); //入栈2
+	// void lua_call (lua_State *L, int nargs, int nresults);
+	lua_call(L, 2, 1); // 调用
+	int sum = (int)lua_tointeger(L, -1); // 结果是 -1,单个返回值.保存结果到c
+	lua_pop(L, 1); // 出栈
 	printf("结果 %d\n",sum);
 }
 

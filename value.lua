@@ -3,6 +3,9 @@ function add(x, y)
  return x + y;
 end
 
+function foo(x, y)
+ return x + y;
+end
 
 
 --这里是用Lua代码定义的窗口大小的配置信息
