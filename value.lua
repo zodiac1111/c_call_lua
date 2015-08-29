@@ -3,8 +3,8 @@ function add(x, y)
  return x + y;
 end
 
-function foo(x, y)
- return x + y;
+function foo(x)
+ return 0;
 end
 
 

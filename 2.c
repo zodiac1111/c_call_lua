@@ -22,15 +22,17 @@ int main()
 {
 
 	int w, h;
+	int ret;
 /// 输入
-	load("./value.lua", &w, &h);
+	ret=load("./value.lua", &w, &h);
 
 /// 输出
+	printf("执行结果 %d",ret);
 	printf("width = %d, height = %d\n", w, h);
 	return 0;
 }
 
-void load(const char* fname, int* w, int* h)
+int load(const char* fname, int* w, int* h)
 {
 	// 启动和开启
 	lua_State* L = luaL_newstate(); /* 创建Lua接口指针 */
@@ -40,19 +42,19 @@ void load(const char* fname, int* w, int* h)
 	/* 这句看似无用，但是不能省 */
 	if (luaL_loadfile(L, fname)||lua_pcall(L, 0, 0, 0)) {
 		printf("Error Msg is %s.\n", lua_tostring(L, -1));
-		return;
+		return -1;
 	}
 
-	//
+	// 取lua中的值
 	lua_getglobal(L, "width");
 	lua_getglobal(L, "height");
 	if (!lua_isnumber(L, -2)) {
 		printf("'width' should be a number\n");
-		return;
+		return -2;
 	}
 	if (!lua_isnumber(L, -1)) {
 		printf("'height' should be a number\n");
-		return;
+		return -3;
 	}
 	*w = lua_tointeger(L, -2);
 	*h = lua_tointeger(L, -1);
@@ -63,6 +65,7 @@ void load(const char* fname, int* w, int* h)
 	lua_pushinteger(L, *w);     //入栈1
 	lua_pushinteger(L, *h);     //入栈2
 	// void lua_call (lua_State *L, int nargs, int nresults);
+	// 2个参数,1个返回值
 	lua_call(L, 2, 1);     // 调用
 	// 结果是 -1,单个返回值.保存结果到c 表示从*栈顶*取得返回值。
 	int sum = (int) lua_tointeger(L, -1);
