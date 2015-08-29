@@ -23,7 +23,7 @@ end
 
 -------- 例子 3 ----------
 -- c 语言获得lua table 例子
-me = { name = "Alice", age = 23}
+me = { name = "Alice", ["age"] = 23}
 
 -------- 例子 4 ----------
 function main(data)
