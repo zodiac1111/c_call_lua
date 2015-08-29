@@ -128,18 +128,25 @@ int load(const char* fname, int* w, int* h)
 	CLOG_INFO("================ 结束 =================");
 
 	// 关闭
-	if(lua_gettop(L)!=0){
-		CLOG_ERR("lua 栈有残留!");
-		stackDump(L);
-	}
+	clean_stack(L);
 	lua_close(L);
 	return 0;
 }
+
+void clean_stack(lua_State* L)
+{
+	int n = lua_gettop(L);
+	if (n!=0) {
+		CLOG_WARN("lua 栈有残留!");
+	}
+	lua_pop(L, n);
+}
+
 int pdata(D *d)
 {
-	CLOG_INFO("	i : %d",d->ivalue);
-	CLOG_INFO("	f : %f",d->fvalue);
-	CLOG_INFO("	t : %d",d->t);
+	CLOG_INFO("	i : %ld", d->ivalue);
+	CLOG_INFO("	f : %lf", d->fvalue);
+	CLOG_INFO("	t : %ld", d->t);
 	return 0;
 }
 #define xstr(s) #s
@@ -158,12 +165,12 @@ int pdata(D *d)
 
 #define get_number(L,d,f)\
 	lua_getfield(L, -1, xstr(f));\
-	d->f=lua_tointeger(L, -1);\
+	d->f=lua_tonumber(L, -1);\
 	lua_pop(L, 1);
 
 int in(lua_State* L, D *d)
 {
-	lua_getglobal(L, "main"); /// lua中的转换函数
+	lua_getglobal(L, "main");     /// lua中的转换函数
 	lua_newtable(L);
 
 	/// 设置具体数据到lua.
@@ -202,8 +209,8 @@ int out(lua_State* L, D *d)
 int transData(lua_State* L, D *d)
 {
 	in(L, d);
-	lua_call(L, 1, 1); /// 1个参数 1个返回值
-	lua_pop(L, 1); /// 返回值出栈
+	lua_call(L, 1, 1);     /// 1个参数 1个返回值
+	lua_pop(L, 1);     /// 返回值出栈
 	out(L, d);
 	return 0;
 }

@@ -38,14 +38,15 @@ function main(data)
 	-- print_r(data);
 
 	-- 修改/计算
-	-- data["fvalue"]= data["fvalue"]/1.732;
+	data["fvalue"]= data["fvalue"]*3.4;
 	-- data["fvalue"]=2.3;
 
 	data["name"]="222";
-	data["t"]=data["ivalue"] + data["fvalue"];
+	data["t"]=data["ivalue"] + 100;
 
 	-- 通过全局变量输出
 	outData=data;
+	--print_r(outData);
 	return 0;
 end
 

@@ -52,9 +52,9 @@
 #endif /** clog debug */
 typedef struct {
 	char* name;
-	int ivalue;
-	float fvalue;
-	int t;
+	long ivalue;
+	double fvalue;
+	long t;
 } D;
 int load(const char* fname, int* w, int* h);
 void stackDump(lua_State* L);
@@ -62,4 +62,5 @@ int transData(lua_State* L, D *d);
 int out(lua_State* L, D *d);
 int in(lua_State* L, D *d);
 int pdata(D *d);
+void clean_stack(lua_State* L);
 #endif
