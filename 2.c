@@ -45,7 +45,9 @@ int load(const char* fname, int* w, int* h)
 		return -1;
 	}
 
-	// 取lua中的值
+	/**
+	 * 取lua中的值
+	 */
 	lua_getglobal(L, "width");
 	lua_getglobal(L, "height");
 	if (!lua_isnumber(L, -2)) {
@@ -59,8 +61,10 @@ int load(const char* fname, int* w, int* h)
 	*w = lua_tointeger(L, -2);
 	*h = lua_tointeger(L, -1);
 
-	// 调用函数流程, 参数2个int值
-	// 参考 http://codingnow.cn/language/1530.html
+	/**
+	 *  调用函数流程, 参数2个int值
+	 *  参考 http://codingnow.cn/language/1530.html
+	 */
 	lua_getglobal(L, "add");     //获得全局变量,函数也是变量
 	lua_pushinteger(L, *w);     //入栈1
 	lua_pushinteger(L, *h);     //入栈2
