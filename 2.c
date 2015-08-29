@@ -6,6 +6,18 @@
 
 #include "read_global_value.h"
 
+// 模拟数据
+typedef struct {
+	char name;
+	int ivalue;
+	float fvalue;
+}D;
+D data={
+	'a'
+	,42
+,3.1415
+};
+
 int main()
 {
     lua_State* L = luaL_newstate();
