@@ -280,7 +280,7 @@ void stackDump(lua_State* L)
 	CLOG_DEBUG("|          |");
 }
 /**
- * 打印结构其
+ * 打印结构体
  * @param d
  * @return
  */
