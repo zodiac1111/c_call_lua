@@ -20,6 +20,12 @@
 #  define CL_LINE_END_LINUX "\n"
 #  define CL_LINE_END_MAC "\r"
 #  define CL_NEWLINE CL_LINE_END_LINUX
+#  define CLOG_DEBUG(fmt, ...) \
+		fprintf(stdout,\
+		"I "CL_ATTR_PURPLE"%s (%s:%d):%s[%d] "CL_ATTR_END fmt CL_NEWLINE\
+		,__FUNCTION__,__FILE__, __LINE__ \
+		,strerror(errno) ,errno\
+		,##__VA_ARGS__ )
 #  define CLOG_INFO(fmt, ...) \
 		fprintf(stdout,\
 		"I "CL_ATTR_GREEN"%s (%s:%d):%s[%d] "CL_ATTR_END fmt CL_NEWLINE\
@@ -39,11 +45,13 @@
 		,strerror(errno) ,errno\
 		,##__VA_ARGS__ )
 #else
+#  define CLOG_DEBUG(fmt, ...)
 #  define CLOG_INFO(fmt, ...)
 #  define CLOG_WARN(fmt, ...)
 #  define CLOG_ERR(fmt, ...)
 #endif /** clog debug */
 
 int load(const char* fname, int* w, int* h);
+void stackDump(lua_State* L);
 
 #endif

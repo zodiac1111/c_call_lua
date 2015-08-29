@@ -23,5 +23,4 @@ end
 
 -------- 例子 3 ----------
 -- c 语言获得lua table 例子
-
-me = { name = "zilongshanren", age = 27}
+me = { name = "Alice", age = 123}
