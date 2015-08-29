@@ -24,9 +24,11 @@ int main()
 	int ret;
 /// 输入
 	ret = load("./value.lua", &w, &h);
-
+	if(ret!=0){
+		CLOG_ERR("lua脚本执行失败 %d", ret);
+	}
 /// 输出
-	CLOG_INFO("lua脚本执行结果 %d", ret);
+	//CLOG_INFO("lua脚本执行结果 %d", ret);
 
 	return 0;
 }
@@ -45,9 +47,10 @@ int load(const char* fname, int* w, int* h)
 		return -1;
 	}
 #else
-	luaL_openlibs(L);
+	//luaL_openlibs(L);  -- 某些操作需要?简单算术可能不需要
 	if (luaL_dofile(L, fname)) {
-		CLOG_ERR("Could not load counter module:%s", fname);
+		//CLOG_ERR("%s", fname);
+		CLOG_ERR("Error: %s", lua_tostring(L,-1));
 		lua_close(L);
 		return -1;
 	}
