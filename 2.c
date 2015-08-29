@@ -52,7 +52,7 @@ int load(const char* fname, int* w, int* h)
 	}
 #endif
 
-	goto e4;
+	//goto e4;
 	/**
 	 * 1. 取lua中的值
 	 */
@@ -70,7 +70,7 @@ int load(const char* fname, int* w, int* h)
 	*h = lua_tointeger(L, -1);
 #define QTY_RETUN_E1 1 /// 返回值数量
 	CLOG_INFO("例1 width = %d, height = %d", *w, *h);
-	stackDump(L);
+
 	/**
 	 *  2. 调用函数流程, 参数2个int值
 	 *  参考 http://codingnow.cn/language/1530.html
@@ -88,10 +88,10 @@ int load(const char* fname, int* w, int* h)
 	double ds = lua_tonumber(L, -1);
 	//stackDump(L);
 	lua_pop(L, QTY_RETUN);     // 出栈 ,只需要弹出返回值
-	lua_pop(L, QTY_PARAM);
+	//lua_pop(L, QTY_PARAM);
 	CLOG_INFO("例2 调用函数 结果 %d, 浮点数 %lf", sum, ds);
-
 	//stackDump(L);
+
 	/**
 	 * 3. 获得lua表例子.名字=字符串,年龄=数字
 	 * http://cn.cocos2d-x.org/tutorial/show?id=1223
