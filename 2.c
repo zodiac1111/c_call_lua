@@ -143,96 +143,108 @@ int load(const char* fname, int* w, int* h)
  */
 int transData(lua_State* L, D *d)
 {
-#define TRANS_PARAM_QTY 1
-#define TRANS_RETVAL_QTY 2
+#define TRANS_PARAM_QTY 1 /// lua函数参数列表数量
+#define TRANS_RETVAL_QTY 2 /// 乱函数返回值数量
 #define FIRST_RET -(TRANS_RETVAL_QTY)
 #define SECOND_RET -(TRANS_RETVAL_QTY-1)
 	int lua_run_ret;     /// 转换程序运行成功与否
 	int ret = 0;
+	/// 1. 输入数据到lua
 	in(L, d);
-	lua_call(L, TRANS_PARAM_QTY, TRANS_RETVAL_QTY);     /// 1个参数 1个返回值
-	stackDump(L);
+	/// 2. 执行lua函数,转换数据 1个参数 1个返回值
+	lua_call(L, TRANS_PARAM_QTY, TRANS_RETVAL_QTY);
 	lua_run_ret =
 		lua_isnumber(L, FIRST_RET) ? lua_tointeger(L, FIRST_RET) : -1;
-	CLOG_INFO("转换结果 = %d", lua_run_ret);
-	if (lua_istable(L, SECOND_RET)) {
-		out(L, d);
-	} else {
-		CLOG_ERR("error! me is not a table");
+	if (lua_run_ret!=0) {
+		CLOG_INFO("转换结果 = %d", lua_run_ret);
 		ret = -1;
+		goto LUA_FUNCTION_RETURN;
 	}
-	lua_pop(L, TRANS_RETVAL_QTY);     /// 返回值出栈
-	stackDump(L);
+	if (!lua_istable(L, SECOND_RET)) {
+		CLOG_ERR("error! me is not a table");
+		ret = -2;
+		goto LUA_FUNCTION_RETURN;
+	}
+	/// 3. 从lua输出数据
+	out(L, d);
+	LUA_FUNCTION_RETURN:
+	/// lua函数结束,返回值出栈
+	lua_pop(L, TRANS_RETVAL_QTY);
+
+	//stackDump(L);
 	return ret;
 }
-void clean_stack(lua_State* L)
-{
-	int n = lua_gettop(L);
-	if (n!=0) {
-		stackDump(L);
-		CLOG_WARN("lua 栈有残留!");
-	}
-	lua_pop(L, n);
-}
 
-int pdata(D *d)
-{
-	CLOG_INFO("	i : %ld", d->ivalue);
-	CLOG_INFO("	f : %lf", d->fvalue);
-	CLOG_INFO("	t : %ld", d->t);
-	return 0;
-}
 #define xstr(s) #s
 
-#define set_int(L,d,f)\
-	lua_pushinteger(L, d->f);\
-	lua_setfield(L, -2, xstr(f));
+/**
+ * T 类型 取 nil,number,integer,string
+ * d 结构体
+ * f 结构体成员
+ * 组合成为类似 set_number 的宏
+ */
+#define set(T,L,sp,d,f)\
+	lua_push##T(L, d->f);\
+	lua_setfield(L, sp, xstr(f));
 #define set_number(L,d,f)\
 	lua_pushnumber(L, d->f);\
 	lua_setfield(L, -2, xstr(f));
+/// 与set类似
+#define get(T,L,d,f)\
+	lua_getfield(L, -1, xstr(f));\
+	d->f=lua_to##T(L, -1);\
+	lua_pop(L, 1);
 
 #define get_int(L,d,f)\
 	lua_getfield(L, -1, xstr(f));\
 	d->f=lua_tointeger(L, -1);\
 	lua_pop(L, 1);
-
-#define get_number(L,d,f)\
+#define get_string(L,d,f)\
 	lua_getfield(L, -1, xstr(f));\
-	d->f=lua_tonumber(L, -1);\
+	strcpy(d->f,lua_tostring(L, -1));\
 	lua_pop(L, 1);
 
+/**
+ * 数据函数,结构体到lua函数参数
+ * @param L lua
+ * @param d 数据输入
+ * @return
+ */
 int in(lua_State* L, D *d)
 {
+	int sp = 0;     /// 栈指针指向栈底,一般<=0
 	lua_getglobal(L, "main");     /// lua中的转换函数
-	// Checks if top of the Lua stack is a function.
-	assert(lua_isfunction(L, -1));
+	sp--;
+	/// Checks if top of the Lua stack is a function.
+	assert(lua_isfunction(L, sp));
 	lua_newtable(L);
-
+	sp--;
 	/// 设置具体数据到lua.
-	lua_pushstring(L, d->name);
-	lua_setfield(L, -2, "name");
+	/// ro
+	set(string, L, sp, d, name);
 
-	set_int(L, d, ivalue);
-	set_int(L, d, t);
-	set_number(L, d, fvalue);
-
+	/// wr
+	set(integer, L, sp, d, ivalue);
+	set(integer, L, sp, d, t);
+	set(number, L, sp, d, fvalue);
+	//stackDump(L);
 	return 0;
 }
 
+/**
+ * 输出函数, lua函数运行结果到结构体
+ * @param L
+ * @param d
+ * @return
+ */
 int out(lua_State* L, D *d)
 {
-	/// 获取lua全局变量
-	/*lua_getglobal(L, "outData");
-	 if (!lua_istable(L, -1)) {
-	 CLOG_ERR("error! me is not a table");
-	 }*/
-
+	get_string(L, d, name);
 	/// 具体数据从lua中读取
-	get_int(L, d, ivalue);
-	get_int(L, d, t);
-	get_number(L, d, fvalue);
-	/// pop全局变量
-	//lua_pop(L, -1);
+	get(integer, L, d, ivalue);
+	get(integer, L, d, t);
+	get(number, L, d, fvalue);
+
 	return 0;
 }
 
@@ -261,4 +273,26 @@ void stackDump(lua_State* L)
 		}
 	}
 	CLOG_DEBUG("|          |");
+}
+/**
+ * 打印结构其
+ * @param d
+ * @return
+ */
+int pdata(D *d)
+{
+	CLOG_INFO("name : %s", d->name);
+	CLOG_INFO("i    : %ld", d->ivalue);
+	CLOG_INFO("f    : %lf", d->fvalue);
+	CLOG_INFO("t    : %ld", d->t);
+	return 0;
+}
+void clean_stack(lua_State* L)
+{
+	int n = lua_gettop(L);
+	if (n!=0) {
+		stackDump(L);
+		CLOG_WARN("lua 栈有残留!");
+	}
+	lua_pop(L, n);
 }

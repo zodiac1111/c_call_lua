@@ -51,7 +51,7 @@
 #  define CLOG_ERR(fmt, ...)
 #endif /** clog debug */
 typedef struct {
-	char* name;
+	char name[12];
 	long ivalue;
 	double fvalue;
 	long t;

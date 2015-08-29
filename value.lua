@@ -40,8 +40,10 @@ function main(data)
 	data["fvalue"]= data["fvalue"]*3.4;
 	-- data["fvalue"]=2.3;
 
-	data["name"]="222";
+	data["name"]="21111122";
 	data["t"]=data["ivalue"] + 100;
+
+	-- 结果
 	--print_r(data);
 	return 0, data;
 end
