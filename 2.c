@@ -32,7 +32,7 @@ int main()
 
 void load(const char* fname, int* w, int* h)
 {
-// 启动和开启
+	// 启动和开启
 	lua_State* L = luaL_newstate(); /* 创建Lua接口指针 */
 	/* luaL_loadfile 读取lua源文件，仅载入内存而未编译 */
 	/* lua_pcall 执行匿名函数，以编译源代码成二进制码 */
@@ -43,7 +43,7 @@ void load(const char* fname, int* w, int* h)
 		return;
 	}
 
-//
+	//
 	lua_getglobal(L, "width");
 	lua_getglobal(L, "height");
 	if (!lua_isnumber(L, -2)) {
@@ -58,18 +58,18 @@ void load(const char* fname, int* w, int* h)
 	*h = lua_tointeger(L, -1);
 
 	// 调用函数流程, 参数2个int值
-// 参考 http://codingnow.cn/language/1530.html
+	// 参考 http://codingnow.cn/language/1530.html
 	lua_getglobal(L, "add");     //获得全局变量,函数也是变量
 	lua_pushinteger(L, *w);     //入栈1
 	lua_pushinteger(L, *h);     //入栈2
 	// void lua_call (lua_State *L, int nargs, int nresults);
 	lua_call(L, 2, 1);     // 调用
-// 结果是 -1,单个返回值.保存结果到c 表示从*栈顶*取得返回值。
+	// 结果是 -1,单个返回值.保存结果到c 表示从*栈顶*取得返回值。
 	int sum = (int) lua_tointeger(L, -1);
 	lua_pop(L, 1);     // 出栈
 	printf("结果 %d\n", sum);
 
-// 关闭
+	// 关闭
 	lua_close(L);
 }
 
