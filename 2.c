@@ -126,8 +126,12 @@ int load(const char* fname, int* w, int* h)
 	CLOG_INFO("====== 输出 ======");
 	pdata(&data);
 	CLOG_INFO("================ 结束 =================");
-	stackDump(L);
+
 	// 关闭
+	if(lua_gettop(L)!=0){
+		CLOG_ERR("lua 栈有残留!");
+		stackDump(L);
+	}
 	lua_close(L);
 	return 0;
 }
