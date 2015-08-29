@@ -27,8 +27,8 @@ int main()
 	ret=load("./value.lua", &w, &h);
 
 /// 输出
-	printf("执行结果 %d",ret);
-	printf("width = %d, height = %d\n", w, h);
+	CLOG_INFO("lua脚本执行结果 %d",ret);
+	CLOG_INFO("width = %d, height = %d", w, h);
 	return 0;
 }
 
@@ -41,7 +41,7 @@ int load(const char* fname, int* w, int* h)
 	/* 并将全局变量压栈（函数名也是变量）。*/
 	/* 这句看似无用，但是不能省 */
 	if (luaL_loadfile(L, fname)||lua_pcall(L, 0, 0, 0)) {
-		CLOG_ERR("Error Msg is %s.\n", lua_tostring(L, -1));
+		CLOG_ERR("Error Msg is %s.", lua_tostring(L, -1));
 		return -1;
 	}
 
@@ -51,11 +51,11 @@ int load(const char* fname, int* w, int* h)
 	lua_getglobal(L, "width");
 	lua_getglobal(L, "height");
 	if (!lua_isnumber(L, -2)) {
-		CLOG_ERR("'width' should be a number\n");
+		CLOG_ERR("'width' should be a number");
 		return -2;
 	}
 	if (!lua_isnumber(L, -1)) {
-		CLOG_ERR("'height' should be a number\n");
+		CLOG_ERR("'height' should be a number");
 		return -3;
 	}
 	*w = lua_tointeger(L, -2);
@@ -74,7 +74,7 @@ int load(const char* fname, int* w, int* h)
 	// 结果是 -1,单个返回值.保存结果到c 表示从*栈顶*取得返回值。
 	int sum = (int) lua_tointeger(L, -1);
 	lua_pop(L, 1);     // 出栈
-	CLOG_INFO("结果 %d\n", sum);
+	CLOG_INFO("结果 %d", sum);
 
 	/**
 	 * 3. 获得lua表例子.
