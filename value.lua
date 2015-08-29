@@ -10,7 +10,7 @@ width = 0x10;
 width = 1.2; --浮点数因为调用者的关系转化为整形
 --]]
 
-width = 200;
+width = 20;
 height = 300;
 
 
@@ -23,4 +23,4 @@ end
 
 -------- 例子 3 ----------
 -- c 语言获得lua table 例子
-me = { name = "Alice", age = 123}
+me = { name = "Alice", age = 23}

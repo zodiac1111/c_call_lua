@@ -76,12 +76,12 @@ int load(const char* fname, int* w, int* h)
 	lua_call(L, QTY_PARAM, QTY_RETUN);     // 调用
 	// 结果是 -1,单个返回值.保存结果到c 表示从*栈顶*取得返回值。
 	int sum = (int) lua_tointeger(L, -1);
-	stackDump(L);
+	//stackDump(L);
 	lua_pop(L, QTY_RETUN);     // 出栈 ,只需要弹出返回值
 	lua_pop(L, QTY_PARAM);
 	CLOG_INFO("例2 调用函数 结果 %d", sum);
 
-	stackDump(L);
+	//stackDump(L);
 	/**
 	 * 3. 获得lua表例子.名字=字符串,年龄=数字
 	 * http://cn.cocos2d-x.org/tutorial/show?id=1223
@@ -110,7 +110,7 @@ int load(const char* fname, int* w, int* h)
 
 
 
-
+	stackDump(L);
 	// 关闭
 	lua_close(L);
 	return 0;
@@ -119,26 +119,26 @@ int load(const char* fname, int* w, int* h)
 // 打印lua栈情况
 void stackDump(lua_State* L)
 {
-	CLOG_DEBUG("==== stack top ====");
+	CLOG_DEBUG("/==bottum==\\");
 	int i = 0;
 	int top = lua_gettop(L);
 	for (i = 1; i<=top; ++i) {
 		int t = lua_type(L, i);
 		switch (t) {
 		case LUA_TSTRING:
-			CLOG_DEBUG("%s ", lua_tostring(L, i));
+			CLOG_DEBUG("| %8s |", lua_tostring(L, i));
 			break;
 		case LUA_TBOOLEAN:
-			CLOG_DEBUG("%s ",
+			CLOG_DEBUG("| %8s |",
 				lua_toboolean(L, i) ? "true " : "false ");
 			break;
 		case LUA_TNUMBER:
-			CLOG_DEBUG("%g ", lua_tonumber(L, i));
+			CLOG_DEBUG("| %8g |", lua_tonumber(L, i));
 			break;
 		default:
-			CLOG_DEBUG("%s ", lua_typename(L, t));
+			CLOG_DEBUG("| %8s |", lua_typename(L, t));
 			break;
 		}
 	}
-	CLOG_DEBUG("==== stack bottum ====");
+	CLOG_DEBUG("|          |");
 }
