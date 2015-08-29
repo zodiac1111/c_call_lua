@@ -38,8 +38,8 @@ function main(data)
 	-- 修改/计算
 	-- data["name"] = 	"21111122"; -- 一般不需要修改名称
 	data["fvalue"] = data["fvalue"] * 1000; -- 缩放等操作
+	data["t"] = data["ivalue"] + data["ivalue2"]; -- 求和等算术操作
 	data["ivalue"] = data["ivalue"] + 100; -- 偏置等操作
-	data["t"] = data["ivalue"] + 42; -- 求和等算术操作
 
 	-- 调试时打开,打印输出的数据
 	-- print_r(data);

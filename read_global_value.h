@@ -53,6 +53,7 @@
 typedef struct {
 	char name[12];
 	long ivalue;
+	long ivalue2;
 	double fvalue;
 	long t;
 } D;

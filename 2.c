@@ -12,6 +12,7 @@
 D data = {
 	.name = "Bob"
 	, .ivalue = 42
+	, .ivalue2 = 20
 	, .fvalue = 3.1415
 	, .t = 0
 };
@@ -224,6 +225,7 @@ int in(lua_State* L, D *d)
 
 	/// wr
 	set(integer, L, sp, d, ivalue);
+	set(integer, L, sp, d, ivalue2);
 	set(integer, L, sp, d, t);
 	set(number, L, sp, d, fvalue);
 	//stackDump(L);
@@ -241,6 +243,7 @@ int out(lua_State* L, D *d)
 	get_string(L, d, name);
 	/// 具体数据从lua中读取
 	get(integer, L, d, ivalue);
+	get(integer, L, d, ivalue2);
 	get(integer, L, d, t);
 	get(number, L, d, fvalue);
 
@@ -282,6 +285,7 @@ int pdata(D *d)
 {
 	CLOG_INFO("name : %s", d->name);
 	CLOG_INFO("i    : %ld", d->ivalue);
+	CLOG_INFO("i2   : %ld", d->ivalue2);
 	CLOG_INFO("f    : %lf", d->fvalue);
 	CLOG_INFO("t    : %ld", d->t);
 	return 0;
