@@ -42,7 +42,7 @@ function main(data)
 	data["t"] = data["ivalue"] + 42; -- 求和等算术操作
 
 	-- 调试时打开,打印输出的数据
-	--print_r(data);
+	-- print_r(data);
 	return 0, data;
 end
 
