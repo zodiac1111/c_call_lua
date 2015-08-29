@@ -76,10 +76,11 @@ int load(const char* fname, int* w, int* h)
 	lua_call(L, QTY_PARAM, QTY_RETUN);     // 调用
 	// 结果是 -1,单个返回值.保存结果到c 表示从*栈顶*取得返回值。
 	int sum = (int) lua_tointeger(L, -1);
+	double ds = lua_tonumber(L, -1);
 	//stackDump(L);
 	lua_pop(L, QTY_RETUN);     // 出栈 ,只需要弹出返回值
 	lua_pop(L, QTY_PARAM);
-	CLOG_INFO("例2 调用函数 结果 %d", sum);
+	CLOG_INFO("例2 调用函数 结果 %d, 浮点数 %lf", sum,ds);
 
 	//stackDump(L);
 	/**
@@ -95,7 +96,7 @@ int load(const char* fname, int* w, int* h)
 	lua_getfield(L, -1, "name");
 	//输出栈顶的name
 	//stackDump(L);
-	CLOG_INFO("name = %s", lua_tostring(L, -1));
+	CLOG_INFO("例3 name = %s", lua_tostring(L, -1));
 	//把栈顶元素弹出去
 	lua_pop(L, 1);
 	//stackDump(L);
@@ -105,11 +106,11 @@ int load(const char* fname, int* w, int* h)
 		CLOG_ERR("'age' should be a number");
 		return -3;
 	}
-	CLOG_INFO("age = %ld", lua_tointeger(L, -1));
+	CLOG_INFO("例3 age = %ld", lua_tointeger(L, -1));
 
 
 
-
+	CLOG_INFO("================ 结束 =================");
 	stackDump(L);
 	// 关闭
 	lua_close(L);
