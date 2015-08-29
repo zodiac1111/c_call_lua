@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
+
 ///  指定的是5.2的版本
 #include <lua5.2/lua.h>
 #include <lua5.2/lauxlib.h> //luaL_newstate();
@@ -171,6 +173,8 @@ int pdata(D *d)
 int in(lua_State* L, D *d)
 {
 	lua_getglobal(L, "main");     /// lua中的转换函数
+	// Checks if top of the Lua stack is a function.
+	assert(lua_isfunction(L, -1));
 	lua_newtable(L);
 
 	/// 设置具体数据到lua.
