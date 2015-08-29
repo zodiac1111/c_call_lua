@@ -26,7 +26,6 @@ end
 me = { name = "Alice", age = 23}
 
 -------- 例子 4 ----------
---local ffi = require("ffi");
 function main(data)
 	--[[
 	data["t"]: 总数据
@@ -37,13 +36,12 @@ function main(data)
 	-- print_r(data);
 
 	-- 修改/计算
-	data["fvalue"]= data["fvalue"]*3.4;
-	-- data["fvalue"]=2.3;
+	data["name"] = "21111122"; -- 一般不需要修改名称
+	data["fvalue"] = data["fvalue"]*3.4; -- 缩放等操作
+	data["ivalue"] = data["ivalue"]+260; -- 偏置等操作
+	data["t"] = data["ivalue"] + 100; -- 求和等算术操作
 
-	data["name"]="21111122";
-	data["t"]=data["ivalue"] + 100;
-
-	-- 结果
+	-- 调试时打开,打印输出的数据
 	--print_r(data);
 	return 0, data;
 end

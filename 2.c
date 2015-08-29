@@ -129,7 +129,6 @@ int load(const char* fname, int* w, int* h)
 	CLOG_INFO("====== 输出 ======");
 	pdata(&data);
 	CLOG_INFO("================ 结束 =================");
-
 	// 关闭
 	clean_stack(L);
 	lua_close(L);
