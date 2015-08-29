@@ -46,7 +46,7 @@ int load(const char* fname, int* w, int* h)
 	}
 
 	/**
-	 * 取lua中的值
+	 * 1. 取lua中的值
 	 */
 	lua_getglobal(L, "width");
 	lua_getglobal(L, "height");
@@ -62,7 +62,7 @@ int load(const char* fname, int* w, int* h)
 	*h = lua_tointeger(L, -1);
 
 	/**
-	 *  调用函数流程, 参数2个int值
+	 *  2. 调用函数流程, 参数2个int值
 	 *  参考 http://codingnow.cn/language/1530.html
 	 */
 	lua_getglobal(L, "add");     //获得全局变量,函数也是变量
@@ -75,6 +75,11 @@ int load(const char* fname, int* w, int* h)
 	int sum = (int) lua_tointeger(L, -1);
 	lua_pop(L, 1);     // 出栈
 	printf("结果 %d\n", sum);
+
+	/**
+	 * 3. 获得lua表例子.
+	 * http://cn.cocos2d-x.org/tutorial/show?id=1223
+	 */
 
 	// 关闭
 	lua_close(L);
