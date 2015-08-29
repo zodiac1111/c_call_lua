@@ -157,7 +157,7 @@ int transData(lua_State* L, D *d)
 	/// 2. 执行lua函数,转换数据 1个参数 1个返回值
 	lua_call(L, TRANS_PARAM_QTY, TRANS_RETVAL_QTY);
 	lua_run_ret =
-		lua_isnumber(L, FIRST_RET) ? lua_tointeger(L, FIRST_RET) : -1;
+		lua_isnumber(L, FIRST_RET) ? lua_tointeger(L, FIRST_RET) : -127;
 	if (lua_run_ret!=0) {
 		CLOG_INFO("转换结果 = %d", lua_run_ret);
 		ret = -1;
