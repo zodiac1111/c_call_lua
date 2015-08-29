@@ -5,19 +5,17 @@
 #include <lua5.2/lauxlib.h> //luaL_newstate();
 #include <lua5.2/lualib.h> // luaL_openlibs
 #include "read_global_value.h"
-
 // 模拟数据
 typedef struct {
-	char name;
+	char* name;
 	int ivalue;
 	float fvalue;
 } D;
 D data = {
-	'a'
+	"Bob"
 	, 42
 	, 3.1415
 };
-
 int main()
 {
 
@@ -48,11 +46,13 @@ int load(const char* fname, int* w, int* h)
 #else
 	luaL_openlibs(L);
 	if (luaL_dofile(L, fname)) {
-		CLOG_ERR("Could not load counter module:%s",fname);
+		CLOG_ERR("Could not load counter module:%s", fname);
 		lua_close(L);
 		return -1;
 	}
 #endif
+
+	goto e4;
 	/**
 	 * 1. 取lua中的值
 	 */
@@ -117,10 +117,85 @@ int load(const char* fname, int* w, int* h)
 	}
 	CLOG_INFO("例3 age = %ld", lua_tointeger(L, -1));
 
+	/**
+	 * 例4 c传递结构体到lua
+	 */
+
+	e4:
+	lua_getglobal(L, "main");
+	lua_newtable(L);
+	lua_pushinteger(L, data.ivalue);
+	lua_setfield(L, -2, "ivalue");
+	lua_pushnumber(L, data.fvalue);
+	lua_setfield(L, -2, "fvalue");
+	lua_pushstring(L, data.name);
+	lua_setfield(L, -2, "name");
+	// 调用
+	lua_call(L, 1, 1);
+	stackDump(L);
+
+	//CLOG_INFO("例4 ivalue = %ld", lua_tointeger(L, -2));
+	// 输出计算结果
+	// CLOG_INFO("数据处理结果 %ld", (lua_tointeger(L, -1)));
+	lua_pop(L, 1);          // 清除堆栈 清除计算结果
+
+	//lua_getfield(L, -1, "ivalue");
+	//CLOG_INFO("例4 ivalue = %ld", lua_tointeger(L, -1));
+
 	CLOG_INFO("================ 结束 =================");
 	stackDump(L);
 	// 关闭
 	lua_close(L);
+	return 0;
+}
+
+
+
+#define xstr(s) # s
+
+#define set_int(L,d,f)\
+	lua_pushinteger(L, d->f);\
+	lua_setfield(L, -2, xstr(f));
+#define set_number(L,d,f)\
+	lua_pushnumber(L, d->f);\
+	lua_setfield(L, -2, xstr(f));
+
+#define get_int(L,d,f)\
+	lua_getfield(L, -1, xstr(f));\
+	d->f=lua_tointeger(L, -1);\
+	lua_pop(L, 1);
+#define get_number(L,d,f)\
+	lua_getfield(L, -1, xstr(f));\
+	d->f=lua_tointeger(L, -1);\
+	lua_pop(L, 1);
+
+int in(lua_State* L, D *d)
+{
+	lua_getglobal(L, "main");
+	lua_newtable(L);
+	lua_pushstring(L, d->name);
+	lua_setfield(L, -2, "name");
+	set_int(L,d,ivalue);
+	set_number(L,d,fvalue);
+	return 0;
+}
+
+int out(lua_State* L, D *d)
+{
+	lua_getglobal(L, "outData");
+	if (!lua_istable(L, -1)) {
+		CLOG_ERR("error! me is not a table");
+	}
+	get_int(L,d,ivalue);
+	get_number(L,d,fvalue);
+	return 0;
+}
+int transData(lua_State* L, D *d)
+{
+	in(L, d);
+	lua_call(L, 1, 1);
+	lua_pop(L, 1);
+	out(L, d);
 	return 0;
 }
 
@@ -148,5 +223,5 @@ void stackDump(lua_State* L)
 			break;
 		}
 	}
-	CLOG_DEBUG("|          |");
+	//CLOG_DEBUG("|          |");
 }

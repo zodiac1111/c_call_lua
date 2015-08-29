@@ -17,10 +17,24 @@ height = 300;
 -------- 例子 2 ----------
 -- c 调用lua 函数,简单参数例子
 function add(x, y)
- return x + y;
+  return x + y;
 end
 
 
 -------- 例子 3 ----------
 -- c 语言获得lua table 例子
 me = { name = "Alice", age = 23}
+outData={};
+
+-------- 例子 4 ----------
+--local ffi = require("ffi");
+function main(data)
+  print( "lua 接收 data.name : " .. data["name"]);
+  print( "lua 接收 data.ivalue : " .. data["ivalue"]);
+  print( "lua 接收 data.fvalue : " .. data["fvalue"]);
+  --data.ivalue=2;
+  outData=data;
+--  return string.format("做个测试 \r\n a.name = %s \r\n a.ivalue = %d \n a.fvalve = %f",
+--    data.name,data.ivalue,data.fvalue);
+  return 0;
+end
