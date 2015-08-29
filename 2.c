@@ -6,16 +6,14 @@
 #include <lua5.2/lualib.h> // luaL_openlibs
 #include "read_global_value.h"
 // 模拟数据
-typedef struct {
-	char* name;
-	int ivalue;
-	float fvalue;
-} D;
+
 D data = {
-	"Bob"
-	, 42
-	, 3.1415
+	.name = "Bob"
+	, .ivalue = 42
+	, .fvalue = 3.1415
+	, .t = 0
 };
+
 int main()
 {
 
@@ -122,36 +120,25 @@ int load(const char* fname, int* w, int* h)
 	 */
 
 	e4:
-	lua_getglobal(L, "main");
-	lua_newtable(L);
-	lua_pushinteger(L, data.ivalue);
-	lua_setfield(L, -2, "ivalue");
-	lua_pushnumber(L, data.fvalue);
-	lua_setfield(L, -2, "fvalue");
-	lua_pushstring(L, data.name);
-	lua_setfield(L, -2, "name");
-	// 调用
-	lua_call(L, 1, 1);
-	stackDump(L);
-
-	//CLOG_INFO("例4 ivalue = %ld", lua_tointeger(L, -2));
-	// 输出计算结果
-	// CLOG_INFO("数据处理结果 %ld", (lua_tointeger(L, -1)));
-	lua_pop(L, 1);          // 清除堆栈 清除计算结果
-
-	//lua_getfield(L, -1, "ivalue");
-	//CLOG_INFO("例4 ivalue = %ld", lua_tointeger(L, -1));
-
+	CLOG_INFO("====== 输入 ======");
+	pdata(&data);
+	transData(L, &data);
+	CLOG_INFO("====== 输出 ======");
+	pdata(&data);
 	CLOG_INFO("================ 结束 =================");
 	stackDump(L);
 	// 关闭
 	lua_close(L);
 	return 0;
 }
-
-
-
-#define xstr(s) # s
+int pdata(D *d)
+{
+	CLOG_INFO("	i : %d",d->ivalue);
+	CLOG_INFO("	f : %f",d->fvalue);
+	CLOG_INFO("	t : %d",d->t);
+	return 0;
+}
+#define xstr(s) #s
 
 #define set_int(L,d,f)\
 	lua_pushinteger(L, d->f);\
@@ -164,6 +151,7 @@ int load(const char* fname, int* w, int* h)
 	lua_getfield(L, -1, xstr(f));\
 	d->f=lua_tointeger(L, -1);\
 	lua_pop(L, 1);
+
 #define get_number(L,d,f)\
 	lua_getfield(L, -1, xstr(f));\
 	d->f=lua_tointeger(L, -1);\
@@ -171,30 +159,47 @@ int load(const char* fname, int* w, int* h)
 
 int in(lua_State* L, D *d)
 {
-	lua_getglobal(L, "main");
+	lua_getglobal(L, "main"); /// lua中的转换函数
 	lua_newtable(L);
+
+	/// 设置具体数据到lua.
 	lua_pushstring(L, d->name);
 	lua_setfield(L, -2, "name");
-	set_int(L,d,ivalue);
-	set_number(L,d,fvalue);
+	set_int(L, d, ivalue);
+	set_int(L, d, t);
+	set_number(L, d, fvalue);
+
 	return 0;
 }
 
 int out(lua_State* L, D *d)
 {
+	/// 获取lua全局变量
 	lua_getglobal(L, "outData");
 	if (!lua_istable(L, -1)) {
 		CLOG_ERR("error! me is not a table");
 	}
-	get_int(L,d,ivalue);
-	get_number(L,d,fvalue);
+
+	/// 具体数据从lua中读取
+	get_int(L, d, ivalue);
+	get_int(L, d, t);
+	get_number(L, d, fvalue);
+
+	/// pop全局变量
+	lua_pop(L, -1);
 	return 0;
 }
+/**
+ * 转换数据
+ * @param L
+ * @param d
+ * @return
+ */
 int transData(lua_State* L, D *d)
 {
 	in(L, d);
-	lua_call(L, 1, 1);
-	lua_pop(L, 1);
+	lua_call(L, 1, 1); /// 1个参数 1个返回值
+	lua_pop(L, 1); /// 返回值出栈
 	out(L, d);
 	return 0;
 }

@@ -50,8 +50,16 @@
 #  define CLOG_WARN(fmt, ...)
 #  define CLOG_ERR(fmt, ...)
 #endif /** clog debug */
-
+typedef struct {
+	char* name;
+	int ivalue;
+	float fvalue;
+	int t;
+} D;
 int load(const char* fname, int* w, int* h);
 void stackDump(lua_State* L);
-
+int transData(lua_State* L, D *d);
+int out(lua_State* L, D *d);
+int in(lua_State* L, D *d);
+int pdata(D *d);
 #endif
