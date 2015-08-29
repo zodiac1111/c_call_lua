@@ -24,7 +24,6 @@ end
 -------- 例子 3 ----------
 -- c 语言获得lua table 例子
 me = { name = "Alice", age = 23}
-outData={};
 
 -------- 例子 4 ----------
 --local ffi = require("ffi");
@@ -43,11 +42,11 @@ function main(data)
 
 	data["name"]="222";
 	data["t"]=data["ivalue"] + 100;
-
 	--print_r(data);
-	return data;
+	return 0, data;
 end
 
+---- 辅助函数,打印表
 function print_r ( t )
 	local print_r_cache={}
 	local function sub_print_r(t,indent)

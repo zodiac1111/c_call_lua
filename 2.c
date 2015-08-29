@@ -143,26 +143,27 @@ int load(const char* fname, int* w, int* h)
  */
 int transData(lua_State* L, D *d)
 {
+#define TRANS_PARAM_QTY 1
+#define TRANS_RETVAL_QTY 2
+#define FIRST_RET -(TRANS_RETVAL_QTY)
+#define SECOND_RET -(TRANS_RETVAL_QTY-1)
+	int lua_run_ret;     /// 转换程序运行成功与否
+	int ret = 0;
 	in(L, d);
-	lua_call(L, 1, 1);     /// 1个参数 1个返回值
+	lua_call(L, TRANS_PARAM_QTY, TRANS_RETVAL_QTY);     /// 1个参数 1个返回值
 	stackDump(L);
-	if (!lua_istable(L, -1)) {
+	lua_run_ret =
+		lua_isnumber(L, FIRST_RET) ? lua_tointeger(L, FIRST_RET) : -1;
+	CLOG_INFO("转换结果 = %d", lua_run_ret);
+	if (lua_istable(L, SECOND_RET)) {
+		out(L, d);
+	} else {
 		CLOG_ERR("error! me is not a table");
+		ret = -1;
 	}
-	/*lua_getfield(L, -1, "t");
-	//stackDump(L);
-	if (!lua_isnumber(L, -1)) {
-		CLOG_ERR("'t' should be a number");
-		return -3;
-	}
-	CLOG_INFO("例x t = %ld", lua_tointeger(L, -1));
-	lua_pop(L, 1);*/
-
-	out(L, d);
-	lua_pop(L, 1);     /// 返回值出栈
+	lua_pop(L, TRANS_RETVAL_QTY);     /// 返回值出栈
 	stackDump(L);
-
-	return 0;
+	return ret;
 }
 void clean_stack(lua_State* L)
 {
@@ -222,9 +223,9 @@ int out(lua_State* L, D *d)
 {
 	/// 获取lua全局变量
 	/*lua_getglobal(L, "outData");
-	if (!lua_istable(L, -1)) {
-		CLOG_ERR("error! me is not a table");
-	}*/
+	 if (!lua_istable(L, -1)) {
+	 CLOG_ERR("error! me is not a table");
+	 }*/
 
 	/// 具体数据从lua中读取
 	get_int(L, d, ivalue);
@@ -259,5 +260,5 @@ void stackDump(lua_State* L)
 			break;
 		}
 	}
-	//CLOG_DEBUG("|          |");
+	CLOG_DEBUG("|          |");
 }
