@@ -74,5 +74,6 @@ int load(const char* fname, int* w, int* h)
 
 	// 关闭
 	lua_close(L);
+	return 0;
 }
 
