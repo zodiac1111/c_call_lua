@@ -165,6 +165,7 @@ int in(lua_State* L, D *d)
 	/// 设置具体数据到lua.
 	lua_pushstring(L, d->name);
 	lua_setfield(L, -2, "name");
+
 	set_int(L, d, ivalue);
 	set_int(L, d, t);
 	set_number(L, d, fvalue);
