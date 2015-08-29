@@ -29,26 +29,23 @@ outData={};
 -------- 例子 4 ----------
 --local ffi = require("ffi");
 function main(data)
-	--print( "lua 接收 data.name : " .. data["name"]);
-	--print( "lua 接收 data.ivalue : " .. data["ivalue"]);
-	--print( "lua 接收 data.fvalue : " .. data["fvalue"]);
 	--[[
 	data["t"]: 总数据
 	data["ivalue"] : 整型数据
 	data["fvalue"] :浮点型数据
-	data["name"]: 名称:只读
---]]
-	print_r(data);
+	data["name"]: 名称:只读	--]]
+	-- 调试时打开,打印输入的数据
+	-- print_r(data);
+
 	-- 修改/计算
 	-- data["fvalue"]= data["fvalue"]/1.732;
 	-- data["fvalue"]=2.3;
+
 	data["name"]="222";
 	data["t"]=data["ivalue"] + data["fvalue"];
-	-- 通过全局变量输出
 
+	-- 通过全局变量输出
 	outData=data;
-	-- return string.format("做个测试 \r\n a.name = %s \r\n a.ivalue = %d \n a.fvalve = %f",
-	-- data.name,data.ivalue,data.fvalue);
 	return 0;
 end
 
