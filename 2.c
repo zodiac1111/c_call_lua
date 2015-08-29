@@ -52,7 +52,7 @@ int load(const char* fname, int* w, int* h)
 	}
 #endif
 
-	//goto e4;
+	goto e4;
 	/**
 	 * 1. 取lua中的值
 	 */
@@ -78,6 +78,7 @@ int load(const char* fname, int* w, int* h)
 #define QTY_PARAM 2 /// 参数数量
 #define QTY_RETUN 1 /// 返回值数量
 	lua_getglobal(L, "add");     //获得全局变量,函数也是变量
+	assert(lua_isfunction(L, -1));
 	lua_pushinteger(L, *w);     //入栈1
 	lua_pushinteger(L, *h);     //入栈2
 	// void lua_call (lua_State *L, int nargs, int nresults);

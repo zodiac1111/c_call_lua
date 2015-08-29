@@ -47,7 +47,7 @@ function main(data)
 	-- 通过全局变量输出
 	outData=data;
 	--print_r(outData);
-	return 0;
+	return data;
 end
 
 function print_r ( t )
