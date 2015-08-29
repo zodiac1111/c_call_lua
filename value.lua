@@ -27,26 +27,23 @@ me = { name = "Alice", ["age"] = 23}
 
 -------- 例子 4 ----------
 function main(data)
-	--[[
-	data["t"]: 总数据
-	data["ivalue"] : 整型数据
-	data["fvalue"] :浮点型数据
-	data["name"]: 名称:只读	--]]
 	-- 调试时打开,打印输入的数据
+	-- print("in");
 	-- print_r(data);
 
 	-- 修改/计算
-	-- data["name"] = 	"21111122"; -- 一般不需要修改名称
+	-- data["name"] = "John"; -- 一般不需要修改名称,需要注意宿主语言的缓冲区大小
 	data["fvalue"] = data["fvalue"] * 1000; -- 缩放等操作
 	data["t"] = data["ivalue"] + data["ivalue2"]; -- 求和等算术操作
-	data["ivalue"] = data["ivalue"] + 100; -- 偏置等操作
+	data["ivalue"] = data["ivalue"] + 200; -- 偏置等操作
 
 	-- 调试时打开,打印输出的数据
+	-- print("output");
 	-- print_r(data);
 	return 0, data;
 end
 
----- 辅助函数,打印表
+---- 辅助函数,打印table
 function print_r ( t )
 	local print_r_cache={}
 	local function sub_print_r(t,indent)
