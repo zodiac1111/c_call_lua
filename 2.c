@@ -28,7 +28,7 @@ int main()
 
 /// 输出
 	CLOG_INFO("lua脚本执行结果 %d", ret);
-	CLOG_INFO("width = %d, height = %d", w, h);
+
 	return 0;
 }
 
@@ -61,6 +61,7 @@ int load(const char* fname, int* w, int* h)
 	*w = lua_tointeger(L, -2);
 	*h = lua_tointeger(L, -1);
 
+	CLOG_INFO("例1 width = %d, height = %d", *w , *h );
 	//stackDump(L);
 	/**
 	 *  2. 调用函数流程, 参数2个int值
