@@ -44,9 +44,7 @@ function main(data)
 	data["name"]="222";
 	data["t"]=data["ivalue"] + 100;
 
-	-- 通过全局变量输出
-	outData=data;
-	--print_r(outData);
+	--print_r(data);
 	return data;
 end
 

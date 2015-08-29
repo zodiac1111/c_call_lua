@@ -135,11 +135,40 @@ int load(const char* fname, int* w, int* h)
 	lua_close(L);
 	return 0;
 }
+/**
+ * 转换数据
+ * @param L
+ * @param d
+ * @return
+ */
+int transData(lua_State* L, D *d)
+{
+	in(L, d);
+	lua_call(L, 1, 1);     /// 1个参数 1个返回值
+	stackDump(L);
+	if (!lua_istable(L, -1)) {
+		CLOG_ERR("error! me is not a table");
+	}
+	/*lua_getfield(L, -1, "t");
+	//stackDump(L);
+	if (!lua_isnumber(L, -1)) {
+		CLOG_ERR("'t' should be a number");
+		return -3;
+	}
+	CLOG_INFO("例x t = %ld", lua_tointeger(L, -1));
+	lua_pop(L, 1);*/
 
+	out(L, d);
+	lua_pop(L, 1);     /// 返回值出栈
+	stackDump(L);
+
+	return 0;
+}
 void clean_stack(lua_State* L)
 {
 	int n = lua_gettop(L);
 	if (n!=0) {
+		stackDump(L);
 		CLOG_WARN("lua 栈有残留!");
 	}
 	lua_pop(L, n);
@@ -192,31 +221,17 @@ int in(lua_State* L, D *d)
 int out(lua_State* L, D *d)
 {
 	/// 获取lua全局变量
-	lua_getglobal(L, "outData");
+	/*lua_getglobal(L, "outData");
 	if (!lua_istable(L, -1)) {
 		CLOG_ERR("error! me is not a table");
-	}
+	}*/
 
 	/// 具体数据从lua中读取
 	get_int(L, d, ivalue);
 	get_int(L, d, t);
 	get_number(L, d, fvalue);
 	/// pop全局变量
-	lua_pop(L, -1);
-	return 0;
-}
-/**
- * 转换数据
- * @param L
- * @param d
- * @return
- */
-int transData(lua_State* L, D *d)
-{
-	in(L, d);
-	lua_call(L, 1, 1);     /// 1个参数 1个返回值
-	lua_pop(L, 1);     /// 返回值出栈
-	out(L, d);
+	//lua_pop(L, -1);
 	return 0;
 }
 
