@@ -41,7 +41,7 @@ int load(const char* fname, int* w, int* h)
 	/* 并将全局变量压栈（函数名也是变量）。*/
 	/* 这句看似无用，但是不能省 */
 	if (luaL_loadfile(L, fname)||lua_pcall(L, 0, 0, 0)) {
-		printf("Error Msg is %s.\n", lua_tostring(L, -1));
+		CLOG_ERR("Error Msg is %s.\n", lua_tostring(L, -1));
 		return -1;
 	}
 
@@ -51,11 +51,11 @@ int load(const char* fname, int* w, int* h)
 	lua_getglobal(L, "width");
 	lua_getglobal(L, "height");
 	if (!lua_isnumber(L, -2)) {
-		printf("'width' should be a number\n");
+		CLOG_ERR("'width' should be a number\n");
 		return -2;
 	}
 	if (!lua_isnumber(L, -1)) {
-		printf("'height' should be a number\n");
+		CLOG_ERR("'height' should be a number\n");
 		return -3;
 	}
 	*w = lua_tointeger(L, -2);
@@ -74,7 +74,7 @@ int load(const char* fname, int* w, int* h)
 	// 结果是 -1,单个返回值.保存结果到c 表示从*栈顶*取得返回值。
 	int sum = (int) lua_tointeger(L, -1);
 	lua_pop(L, 1);     // 出栈
-	printf("结果 %d\n", sum);
+	CLOG_INFO("结果 %d\n", sum);
 
 	/**
 	 * 3. 获得lua表例子.
@@ -83,7 +83,7 @@ int load(const char* fname, int* w, int* h)
 	//从Lua里面取得me这个table，并压入栈
 	lua_getglobal(L, "me");
 	if (!lua_istable(L, -1)) {
-		printf("error! me is not a table");
+		CLOG_ERR("error! me is not a table");
 	}
 
 	// 关闭
