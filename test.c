@@ -9,33 +9,25 @@
 
 #include "test.h"
 
-// 模拟数据
-D data = {
-	.name = "Bob"
-	, .ivalue = 42
-	, .ivalue2 = 20
-	, .fvalue = 3.1415
-	, .t = 0
-};
+
 
 int main()
 {
-
-	int w, h;
 	int ret;
 /// 输入
-	ret = load("./value.lua", &w, &h);
+	ret = lua_do("./value.lua");
 	if(ret!=0){
 		CLOG_ERR("lua脚本执行失败 %d", ret);
 	}
 /// 输出
-	//CLOG_INFO("lua脚本执行结果 %d", ret);
 
 	return 0;
 }
 
-int load(const char* fname, int* w, int* h)
+int lua_do(const char* fname)
 {
+	long w;
+	long h;
 	// 启动和开启
 	lua_State* L = luaL_newstate(); /* 创建Lua接口指针 */
 	/* luaL_loadfile 读取lua源文件，仅载入内存而未编译 */
@@ -57,7 +49,6 @@ int load(const char* fname, int* w, int* h)
 	}
 #endif
 
-	goto e4;
 	/**
 	 * 1. 取lua中的值
 	 */
@@ -71,10 +62,11 @@ int load(const char* fname, int* w, int* h)
 		CLOG_ERR("'height' should be a number");
 		return -3;
 	}
-	*w = lua_tointeger(L, -2);
-	*h = lua_tointeger(L, -1);
+	w = lua_tointeger(L, -2);
+	h = lua_tointeger(L, -1);
+	lua_pop(L, 2);
 #define QTY_RETUN_E1 1 /// 返回值数量
-	CLOG_INFO("例1 width = %d, height = %d", *w, *h);
+	CLOG_INFO("例1 width = %ld, height = %ld", w, h);
 
 	/**
 	 *  2. 调用函数流程, 参数2个int值
@@ -84,8 +76,8 @@ int load(const char* fname, int* w, int* h)
 #define QTY_RETUN 1 /// 返回值数量
 	lua_getglobal(L, "add");     //获得全局变量,函数也是变量
 	assert(lua_isfunction(L, -1));
-	lua_pushinteger(L, *w);     //入栈1
-	lua_pushinteger(L, *h);     //入栈2
+	lua_pushinteger(L, w);     //入栈1
+	lua_pushinteger(L, h);     //入栈2
 	// void lua_call (lua_State *L, int nargs, int nresults);
 	// 2个参数,1个返回值
 	lua_call(L, QTY_PARAM, QTY_RETUN);     // 调用
@@ -122,18 +114,25 @@ int load(const char* fname, int* w, int* h)
 		return -3;
 	}
 	CLOG_INFO("例3 age = %ld", lua_tointeger(L, -1));
-
+	lua_pop(L, 1); // age 出栈
+	lua_pop(L, 1); // table (me) 出栈
 	/**
 	 * 例4 c传递结构体到lua
 	 */
-
-	e4:
+	// 模拟数据
+	D data = {
+		.name = "Bob"
+		, .ivalue = 42
+		, .ivalue2 = 20
+		, .fvalue = 3.1415
+		, .t = 0
+	};
 	CLOG_INFO("====== 输入 ======");
 	pdata(&data);
 	transData(L, &data);
 	CLOG_INFO("====== 输出 ======");
 	pdata(&data);
-	CLOG_INFO("================ 结束 =================");
+	CLOG_INFO("====== 结束 ======");
 	// 关闭
 	clean_stack(L);
 	lua_close(L);

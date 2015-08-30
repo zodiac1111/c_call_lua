@@ -57,7 +57,7 @@ typedef struct {
 	double fvalue;
 	long t;
 } D;
-int load(const char* fname, int* w, int* h);
+int lua_do(const char* fname);
 void stackDump(lua_State* L);
 int transData(lua_State* L, D *d);
 int out(lua_State* L, D *d);

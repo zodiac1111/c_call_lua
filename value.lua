@@ -26,6 +26,7 @@ end
 me = { name = "Alice", ["age"] = 23}
 
 -------- 例子 4 ----------
+local foo;
 function main(data)
 	-- 调试时打开,打印输入的数据
 	-- print("in");
@@ -41,7 +42,7 @@ function main(data)
 	-- print("output");
 	-- print_r(data);
 	return 0, data;
-endlocal
+end
 
 -- 简单内部函数例子, 输入值+1后返回
 function foo(a)
