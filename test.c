@@ -40,7 +40,7 @@ int lua_do(const char* fname)
 		return -1;
 	}
 #else
-	//luaL_openlibs(L);  -- 某些操作需要?简单算术可能不需要
+	// luaL_openlibs(L);  -- 某些操作需要?简单算术可能不需要(需要的时候再添加)
 	if (luaL_dofile(L, fname)) {
 		//CLOG_ERR("%s", fname);
 		CLOG_ERR("Error: %s", lua_tostring(L,-1));
@@ -116,10 +116,11 @@ int lua_do(const char* fname)
 	CLOG_INFO("例3 age = %ld", lua_tointeger(L, -1));
 	lua_pop(L, 1); // age 出栈
 	lua_pop(L, 1); // table (me) 出栈
+	//stackDump(L);
 	/**
 	 * 例4 c传递结构体到lua
 	 */
-	// 模拟数据
+	/// 模拟数据
 	D data = {
 		.name = "Bob"
 		, .ivalue = 42
@@ -127,10 +128,10 @@ int lua_do(const char* fname)
 		, .fvalue = 3.1415
 		, .t = 0
 	};
-	CLOG_INFO("====== 输入 ======");
+	CLOG_INFO("例4 ====== 输入 ======");
 	pdata(&data);
 	transData(L, &data);
-	CLOG_INFO("====== 输出 ======");
+	CLOG_INFO("例4 ====== 输出 ======");
 	pdata(&data);
 	CLOG_INFO("====== 结束 ======");
 	// 关闭

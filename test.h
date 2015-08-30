@@ -20,6 +20,7 @@
 #  define CL_LINE_END_LINUX "\n"
 #  define CL_LINE_END_MAC "\r"
 #  define CL_NEWLINE CL_LINE_END_LINUX
+/// 简单的分级别调试,只要头文件.根据需要可以去挑error库
 #  define CLOG_DEBUG(fmt, ...) \
 		fprintf(stdout,\
 		"I "CL_ATTR_PURPLE"%s (%s:%d):%s[%d] "CL_ATTR_END fmt CL_NEWLINE\
