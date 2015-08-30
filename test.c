@@ -6,7 +6,8 @@
 #include <lua5.2/lua.h>
 #include <lua5.2/lauxlib.h> //luaL_newstate();
 #include <lua5.2/lualib.h> // luaL_openlibs
-#include "read_global_value.h"
+
+#include "test.h"
 
 // 模拟数据
 D data = {

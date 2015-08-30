@@ -36,11 +36,16 @@ function main(data)
 	data["fvalue"] = data["fvalue"] * 1000; -- 缩放等操作
 	data["t"] = data["ivalue"] + data["ivalue2"]; -- 求和等算术操作
 	data["ivalue"] = data["ivalue"] + 200; -- 偏置等操作
-
+	data["ivalue"]=foo(data["ivalue"]);
 	-- 调试时打开,打印输出的数据
 	-- print("output");
 	-- print_r(data);
 	return 0, data;
+endlocal
+
+-- 简单内部函数例子, 输入值+1后返回
+function foo(a)
+	return a+1;
 end
 
 ---- 辅助函数,打印table
