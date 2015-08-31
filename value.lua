@@ -27,21 +27,21 @@ me = { name = "Alice", ["age"] = 23}
 
 -------- 例子 4 ----------
 local foo;
-function main(data)
+function main(db)
 	-- 调试时打开,打印输入的数据
 	-- print("in");
 	-- print_r(data);
 
 	-- 修改/计算
 	-- data["name"] = "John"; -- 一般不需要修改名称,需要注意宿主语言的缓冲区大小
-	data["fvalue"] = data["fvalue"] * 1000; -- 缩放等操作
-	data["t"] = data["ivalue"] + data["ivalue2"]; -- 求和等算术操作
-	data["ivalue"] = data["ivalue"] + 200; -- 偏置等操作
-	data["ivalue"]=foo(data["ivalue"]);
+	db["fvalue"] = db["fvalue"] * 1000; -- 缩放等操作
+	db["t"] = db["ivalue"] + db["ivalue2"]; -- 求和等算术操作
+	db["ivalue"] = db["ivalue"] + 200; -- 偏置等操作
+	db["ivalue"]=foo(db["ivalue"]);
 	-- 调试时打开,打印输出的数据
 	-- print("output");
 	-- print_r(data);
-	return 0, data;
+	return 0, db;
 end
 
 -- 简单内部函数例子, 输入值+1后返回

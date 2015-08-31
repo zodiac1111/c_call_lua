@@ -226,7 +226,6 @@ int in(lua_State* L, D *d)
 	/// 设置具体数据到lua.
 	/// ro
 	set(string, L, sp, d, name);
-
 	/// wr
 	set(integer, L, sp, d, ivalue);
 	set(integer, L, sp, d, ivalue2);
